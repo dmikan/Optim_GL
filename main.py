@@ -1,19 +1,16 @@
 from data_loader import DataLoader
 from optimization_model import OptimizationModel
+import pandas as pd
 
 # Ruta del archivo CSV
 csv_file = "data/datos.csv"
 
 # Cargar los datos
 loader = DataLoader(csv_file)
-data = loader.load_data()
-
-# Extraer qgl y wells del dataset
-qgl = data[0]  # Primera fila es qgl
-wells = data[1:]  # Resto de filas son los wells
+qgl, q_fluid_wells = loader.load_data()
 
 # Crear modelo de optimización
-model = OptimizationModel(qgl, wells)
+model = OptimizationModel(qgl, q_fluid_wells)
 
 # Construir el modelo paso a paso
 model.construir_modelo()
