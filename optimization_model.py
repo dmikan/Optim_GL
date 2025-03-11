@@ -5,12 +5,13 @@ from data_loader import DataLoader
 class OptimizationModel:
     """Class representing the optimisation model"""
 
-    def __init__(self, q_gl, q_fluid_wells):
+    def __init__(self, q_gl, q_fluid_wells, available_qgl_total):
         self.q_gl = q_gl
         self.q_fluid_wells = q_fluid_wells
+        self.available_qgl_total = available_qgl_total
         #self.prob = pulp.LpProblem("Maximizar_Suma_Wells", pulp.LpMaximize)
         #self.y_wells = self.define_variables()
-        #self.build_model()
+        #self.build_objective_function()
         #self.agregar_restricciones()
 
     def define_optimisation_problem(self):
@@ -25,8 +26,8 @@ class OptimizationModel:
         ]
         return binary_variables
 
-    def build_model(self):
-        """Defines the objective function to maximise"""
+    def build_objective_function(self):
+        """Defines the objective function to be maximised"""
         variables = self.define_variables()
         self.prob += pulp.lpSum(
             variables[i][j] * self.q_fluid_wells[i][j]
@@ -36,26 +37,28 @@ class OptimizationModel:
         return self.prob
 
     def add_constraints(self):
-        """Asegura que cada well seleccione exactamente un valor de qgl."""
-        for index, col in enumerate(self.q_fluid_wells):
+        """Make sure that each well selects only one value of q_gl"""
+        variables = self.define_variables()
+        for index, col in enumerate(variables):
             self.prob += pulp.lpSum(col) == 1, f"Restriccion_Seleccion_Unica_{index}"
         self.prob += pulp.lpSum(
             variables[i][j] * self.q_gl[j]
-            for i in range(len(self.q_fluid_wells))
             for j in range(len(self.q_gl))
-        ) <= 4000, "constraint q_gl available"
-        print(prob)
+            for i in range(len(self.q_fluid_wells))
+        ) <= self.available_qgl_total, "constraint q_gl available"
+        return self.prob
 
 
-    def resolver(self):
-        """Resuelve el problema de optimización."""
+    def solve_prob(self):
+        """Solve the optimisation problem"""
         self.prob.solve()
 
-    def obtener_resultados(self):
+
+    def get_results(self):
         """Obtiene los valores óptimos de qgl para cada well."""
         return [
-            next((self.qgl[j] for j in range(len(y_well)) if pulp.value(y_well[j]) == 1), None)
-            for y_well in self.y_wells
+            next((self.q_gl[j] for j in range(len(q_gl)) if pulp.value(well_fluid[j]) == 1), None)
+            for well_fluid in self.q_fluid_wells
         ]
 
 
@@ -63,14 +66,16 @@ if __name__ == "__main__":
     path_data = './data/datos.csv'
     data = DataLoader(path_data)
     q_gl,q_fluid_wells = data.load_data()
-    model = OptimizationModel(q_gl, q_fluid_wells)
-    prob = model.define_optimisation_problem()
-    variables = model.define_variables()
-    #modelo = model.build_model()
-    #restricciones = model.agregar_restricciones()
+    model = OptimizationModel(q_gl, q_fluid_wells, 4000)
+    (model.define_optimisation_problem())
+    model.define_variables()
+    model.build_objective_function()
+    model.add_constraints()
+    model.solve_prob()
+    results = model.get_results()
 
 
     #resolve = model.resolver()
 
 
-    print(variables)
+    print(results)
