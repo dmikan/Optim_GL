@@ -76,7 +76,7 @@ if __name__ == "__main__":
     path_data = './data/datos.csv'
     data = DataLoader(path_data)
     q_gl,q_fluid_wells = data.load_data()
-    model = OptimizationModel(q_gl, q_fluid_wells, 1000)
+    model = OptimizationModel(q_gl, q_fluid_wells, 4000)
     (model.define_optimisation_problem())
     model.define_variables()
     model.build_objective_function()
