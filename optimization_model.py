@@ -60,7 +60,7 @@ class OptimizationModel:
             for j in range(len(self.q_gl))))
             for i in range(len(self.q_fluid_wells))
         ]
-        return(var_results)
+        return var_results
 
     def get_optimal_injection_rates(self):
         """Get production value for each well"""
@@ -69,7 +69,7 @@ class OptimizationModel:
             for j in range(len(self.q_gl))))
             for i in range(len(self.q_fluid_wells))
         ]
-        return(var_results)
+        return var_results
 
 
 if __name__ == "__main__":
