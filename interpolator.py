@@ -47,33 +47,47 @@ class Interpolator():
 if __name__ == "__main__":
 
     # linear interpolator
-    path_data = './data/datos.csv'
+    path_data = './data/gl sensitivity template.csv'
     data = DataLoader(path_data)
-    q_gl, q_fluid_wells = data.load_data()
-
-    print(q_gl)
-    print(q_fluid_wells)
-
-    lininterp = Interpolator(q_gl, q_fluid_wells[1], 1)
-    result = lininterp.linear_interpolator()
-    #print(result)
-    #plt.plot(result[0], result[1], label= 'linear')
+    q_gl, q_fluid_wells = data.load_data_gl_template()
+    q_gl_max = max([np.max(j) for j in q_gl])
+    print(q_gl_max)
 
 
-    pchip = Interpolator(q_gl, q_fluid_wells[1], 1)
-    result_pchip = pchip.pchip_interpolator()
-    plt.plot(result_pchip[0], result_pchip[1], label= 'pchip')
-    print(result_pchip)
+    #print(q_gl)
+    #print(q_fluid_wells)
 
-    spl = Interpolator(q_gl, q_fluid_wells[1], 1)
-    result_spl = spl.spline_interpolator()
-    #plt.plot(result_spl[0], result_spl[1], label='spline')
+    # lininterp = Interpolator(q_gl, q_fluid_wells[1], 1)
+    # result = lininterp.linear_interpolator()
+    # #print(result)
+    # #plt.plot(result[0], result[1], label= 'linear')
 
-    univar = Interpolator(q_gl, q_fluid_wells[1], 1)
-    result_univar = univar.univariate_spline_interpolator()
-    #plt.plot(result_univar[0], result_univar[1], label= 'univar_spl')
 
-    plt.plot(q_gl, q_fluid_wells[1], 'o', color= 'red')
-    plt.legend()
+    # pchip = Interpolator(q_gl, q_fluid_wells[1], 1)
+    # result_pchip = pchip.pchip_interpolator()
+    # plt.plot(result_pchip[0], result_pchip[1], label= 'pchip')
+    # print(result_pchip)
 
-    plt.show()
+    # spl = Interpolator(q_gl, q_fluid_wells[1], 1)
+    # result_spl = spl.spline_interpolator()
+    # #plt.plot(result_spl[0], result_spl[1], label='spline')
+
+    # univar = Interpolator(q_gl, q_fluid_wells[1], 1)
+    # result_univar = univar.univariate_spline_interpolator()
+    # #plt.plot(result_univar[0], result_univar[1], label= 'univar_spl')
+
+    # plt.plot(q_gl, q_fluid_wells[1], 'o', color= 'red')
+    # plt.legend()
+
+    # plt.show()
+    q_gl_interpolated = []
+    q_fluid_interpolated = []
+    for i, j in zip(q_gl, q_fluid_wells):
+
+        pchip = Interpolator(i, j, 1)
+        result_pchip = pchip.pchip_interpolator()
+        q_gl_interpolated.append(result_pchip[0])
+        q_fluid_interpolated.append(result_pchip[1])
+
+    print(len(q_gl_interpolated))
+    print(len(q_fluid_interpolated))
