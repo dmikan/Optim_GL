@@ -18,11 +18,11 @@ class Extrapolator():
 
     def extrapolate_interp1d(self):
         x_axis_range = np.arange(0, self.upper_bound, self.step)
-        #f = interp1d(self.x_values_given, self.y_values_given, fill_value= "extrapolate")
-        f = natural = CubicSpline(self.x_values_given, self.y_values_given, bc_type='natural')
+        #f = interp1d(self.x_values_given, self.y_values_given, kind='linear', fill_value= "extrapolate")
+        f = CubicSpline(self.x_values_given, self.y_values_given, bc_type='not-a-knot')
+        #spline_extended = add_boundary_knots(f, self.x_values_given, self.y_values_given)
         y_extrapolated = f(x_axis_range)
         return x_axis_range, y_extrapolated
-
 
 
 if __name__ == "__main__":
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     q_gl_interpolated = []
     q_fluid_interpolated = []
     for i, j in zip(q_gl_list, q_fluid_wells_list):
-        pchip = Interpolator(i, j, 1)
+        pchip = Interpolator(i, j, 100)
         result_pchip = pchip.pchip_interpolator()
         q_gl_interpolated.append(result_pchip[0])
         q_fluid_interpolated.append(result_pchip[1])
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
 
     #extrapolate
-    q_gl_extrapolated = []
+    """q_gl_extrapolated = []
     q_fluid_extrapolated = []
     for i, j in zip(q_gl_interpolated, q_fluid_interpolated):
         ext = Extrapolator(i, j, 1, q_gl_max)
@@ -61,3 +61,13 @@ if __name__ == "__main__":
         plt.plot(i,j)
     plt.title("Extrapolation")
     plt.show()
+    """
+
+    x= q_gl_interpolated[0]
+    y= q_fluid_interpolated[0]
+    x_new = [0, 200,400,600,800,1000,1200,1400]
+    print(x,y,x_new)
+
+f = CubicSpline(x, y, bc_type='not-a-knot')
+y_extrapolated = f(x_new)
+print(y_extrapolated)
