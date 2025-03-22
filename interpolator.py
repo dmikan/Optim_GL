@@ -51,8 +51,9 @@ if __name__ == "__main__":
     data = DataLoader(path_data)
     q_gl, q_fluid_wells = data.load_data_gl_template()
     q_gl_max = max([np.max(j) for j in q_gl])
-    print(q_gl_max)
-
+    #print(q_gl_max)
+    print(len(q_gl), len(q_fluid_wells))
+    print(q_gl)
 
     #print(q_gl)
     #print(q_fluid_wells)
@@ -62,11 +63,13 @@ if __name__ == "__main__":
     # #print(result)
     # #plt.plot(result[0], result[1], label= 'linear')
 
+    for i,j in zip(q_gl, q_fluid_wells):
+        pchip = Interpolator(i, j, 1)
+        result_pchip_q_gl, result_chip_q_fluid = pchip.pchip_interpolator()
 
-    # pchip = Interpolator(q_gl, q_fluid_wells[1], 1)
-    # result_pchip = pchip.pchip_interpolator()
-    # plt.plot(result_pchip[0], result_pchip[1], label= 'pchip')
-    # print(result_pchip)
+        plt.plot(result_pchip_q_gl, result_chip_q_fluid, label= 'pchip')
+        plt.plot(q_gl, q_fluid_wells, 'o')
+    plt.show()
 
     # spl = Interpolator(q_gl, q_fluid_wells[1], 1)
     # result_spl = spl.spline_interpolator()
@@ -80,7 +83,10 @@ if __name__ == "__main__":
     # plt.legend()
 
     # plt.show()
-    q_gl_interpolated = []
+
+
+
+"""    q_gl_interpolated = []
     q_fluid_interpolated = []
     for i, j in zip(q_gl, q_fluid_wells):
 
@@ -89,5 +95,13 @@ if __name__ == "__main__":
         q_gl_interpolated.append(result_pchip[0])
         q_fluid_interpolated.append(result_pchip[1])
 
-    print(len(q_gl_interpolated))
-    print(len(q_fluid_interpolated))
+    for i,j in zip(q_gl_interpolated, q_fluid_interpolated):
+        plt.plot(i,j)
+    plt.title("Interpolation")
+    plt.show()
+
+
+    print((q_gl_interpolated))
+    print((q_fluid_interpolated))
+
+"""
