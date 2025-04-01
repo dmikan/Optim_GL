@@ -13,7 +13,7 @@ class DataLoader:
         return qgl, q_fluid_wells
 
     def load_data_gl_template(self):
-        """ """
+        """Retuns a two lists of lists"""
         df = pd.read_csv(self.file_path)
         column_labels_qgl = df.columns[1::2]
         column_label_prod = df.columns[2::2]
@@ -27,4 +27,6 @@ if __name__ == "__main__":
     # qgl, fluids = load.load_data()
     # print(fluids)
     load = DataLoader('./data/gl sensitivity template.csv')
-    load.load_data_gl_template()
+    var1 = load.load_data_gl_template()
+    print(var1[0], var1[1])
+    print(len(var1[1]))
