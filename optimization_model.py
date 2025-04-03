@@ -73,11 +73,11 @@ class OptimizationModel:
 
 
 if __name__ == "__main__":
-    path_data = './data/datos.csv'
+    path_data = './data/fitted_curves.csv'
     data = DataLoader(path_data)
-    q_gl,q_fluid_wells = data.load_data()
-    model = OptimizationModel(q_gl, q_fluid_wells, 4000)
-    (model.define_optimisation_problem())
+    q_gl,q_oil = data.load_data()
+    model = OptimizationModel(q_gl, q_oil, 36)
+    model.define_optimisation_problem()
     model.define_variables()
     model.build_objective_function()
     model.add_constraints()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     result_prod_rates = model.get_maximised_prod_rates()
     result_optimal_qgl = model.get_optimal_injection_rates()
 
-    print(result_prod_rates)
-    print(sum(result_prod_rates))
-    print(result_optimal_qgl)
-    print(sum(result_optimal_qgl))
+    print("Los valores de produccón óptimos son: ", result_prod_rates)
+    print("La producción total es: ", sum(result_prod_rates))
+    print("Los valores de qgl óptimos son: ", result_optimal_qgl)
+    print("El valor óptimo de qgl es: ", sum(result_optimal_qgl))
