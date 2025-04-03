@@ -48,12 +48,12 @@ if __name__ == "__main__":
     axes = axes.flatten()  # Para iterar fácilmente
 
     # Generar valores escalados para graficar
-    q_gl_range = np.linspace(0, 4, 1000)
+    q_gl_range = np.linspace(0, 4, 500)
 
     # Crear un DataFrame con la primera columna como q_gl_range
     df_results = pd.DataFrame({"q_gl": q_gl_range})
 
-    for well in range(6):
+    for well in range(len(q_oil_list)):
         q_gl = q_gl_list[well]
         q_oil = q_oil_list[well]
 

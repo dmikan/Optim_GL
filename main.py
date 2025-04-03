@@ -11,12 +11,13 @@ loader = DataLoader(csv_file)
 q_gl_list, q_oil_list = loader.load_data_gl_template()
 
 # Generar valores escalados para graficar
-q_gl_range = np.linspace(0, 4, 1000)
+q_gl_max = max([np.max(j) for j in q_gl_list])
+q_gl_range = np.linspace(0, q_gl_max, 100)
 
 # Crear un DataFrame con la primera columna como q_gl_range
-df_input_opt = pd.DataFrame({"q_gl": q_gl_range})
+df_input = pd.DataFrame({"q_gl": q_gl_range})
 
-for well in range(6):
+for well in range(len(q_oil_list)):
     q_gl = q_gl_list[well]
     q_oil = q_oil_list[well]
 
@@ -31,12 +32,13 @@ for well in range(6):
     y_pred[y_pred < 0] = 0
 
     # Agregar columna al DataFrame con el nombre "Well_X"
-    df_input_opt[f"well_{well}"] = y_pred
-    q_gl = df_input_opt['q_gl'].tolist()
-    q_oil = df_input_opt.iloc[: , 1:].T.to_numpy().tolist()
+    df_input[f"well_{well}"] = y_pred
+
+q_gl = df_input['q_gl'].tolist()
+q_oil = df_input.iloc[: , 1:].T.to_numpy().tolist()
 
 # Crear modelo de optimización
-model = OptimizationModel(q_gl, q_oil, 6)
+model = OptimizationModel(q_gl, q_oil, 10)
 
 # Construir el modelo paso a paso
 model.define_optimisation_problem()

@@ -1,13 +1,13 @@
 === Resultados de Optimización ===
 
-Producción total: 11107.194482756564
+Producción total: 11241.728580614494
 
-Valor total óptimo de q_gl: 5.997997997997998
+Valor total óptimo de q_gl: 8.863636363636363
 
 Resultados por pozo:
-Well 1: Producción óptima = 1689.0155892958228, q_gl óptimo = 0.7927927927927928
-Well 2: Producción óptima = 1414.2852953080007, q_gl óptimo = 0.8368368368368369
-Well 3: Producción óptima = 1868.462537722719, q_gl óptimo = 0.8928928928928929
-Well 4: Producción óptima = 1946.6812204003013, q_gl óptimo = 1.4374374374374375
-Well 5: Producción óptima = 1799.1597971104557, q_gl óptimo = 1.093093093093093
-Well 6: Producción óptima = 2389.5900429192634, q_gl óptimo = 0.944944944944945
+Well 1: Producción óptima = 1698.0781347377524, q_gl óptimo = 0.9848484848484848
+Well 2: Producción óptima = 1428.9222914622778, q_gl óptimo = 1.1424242424242423
+Well 3: Producción óptima = 1882.0308468443948, q_gl óptimo = 1.1818181818181817
+Well 4: Producción óptima = 2000.9943731408785, q_gl óptimo = 2.5606060606060606
+Well 5: Producción óptima = 1833.963186024455, q_gl óptimo = 1.8909090909090907
+Well 6: Producción óptima = 2397.739748404737, q_gl óptimo = 1.103030303030303
