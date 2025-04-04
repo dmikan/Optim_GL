@@ -13,7 +13,9 @@ class Fitting():
         self.q_oil = q_oil
 
     def fit(self, model):
-        params_list, _ = curve_fit(model, self.q_gl, self.q_oil)
+        params_list, _ = curve_fit(model, self.q_gl, self.q_oil, 
+                                   bounds = ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], 
+                                             [np.inf, np.inf, np.inf, np.inf, 100]))
         return params_list
 
     def model_namdar(self, q_gl_range, a, b, c, d, e):
@@ -40,7 +42,7 @@ class Fitting():
 
 if __name__ == "__main__":
     # Cargar datos
-    load = DataLoader('./data/gl_nishikiori_data_five.csv')
+    load = DataLoader('./data/gl_kanu_data.csv')
     q_gl_list, q_oil_list = load.load_data_gl_template()
 
     # Configurar la figura con 2 filas y 3 columnas, aumentando la altura
@@ -65,6 +67,7 @@ if __name__ == "__main__":
         # Ajuste del modelo
         fitter = Fitting(q_gl, q_oil)
         a, b, c, d, e = fitter.fit(fitter.model_namdar)
+        print(f"✅ Well {well+1}: a={a}, b={b}, c={c}, d={d}, e={e}")
         
         # Predecir valores
         y_pred = fitter.model_namdar(q_gl_range, a, b, c, d, e)
