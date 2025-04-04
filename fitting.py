@@ -42,7 +42,7 @@ class Fitting():
 
 if __name__ == "__main__":
     # Cargar datos
-    load = DataLoader('./data/gl_kanu_data.csv')
+    load = DataLoader('./data/gl_nishikiori_data_five.csv')
     q_gl_list, q_oil_list = load.load_data_gl_template()
 
     # Configurar la figura con 2 filas y 3 columnas, aumentando la altura
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         fitter = Fitting(q_gl, q_oil)
         a, b, c, d, e = fitter.fit(fitter.model_namdar)
         print(f"✅ Well {well+1}: a={a}, b={b}, c={c}, d={d}, e={e}")
-        
+
         # Predecir valores
         y_pred = fitter.model_namdar(q_gl_range, a, b, c, d, e)
 
