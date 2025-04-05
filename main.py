@@ -10,40 +10,26 @@ csv_file = "./data/gl_nishikiori_data_five.csv"
 loader = DataLoader(csv_file)
 q_gl_list, q_oil_list = loader.load_data_gl_template()
 
-# Asegurar que todos los valores en q_gl_list sean numéricos
-q_gl_list = [[x for x in q_gl if not np.isnan(x)] for q_gl in q_gl_list]
-q_oil_list = [[x for x in q_oil if not np.isnan(x)] for q_oil in q_oil_list]
-
 # Generar valores escalados para graficar
 q_gl_max = max([np.max(j) for j in q_gl_list])
 q_gl_range = np.linspace(0, q_gl_max, 1000)
 
+y_pred_list = []
 # Crear un DataFrame con la primera columna como q_gl_range
-df_input = pd.DataFrame({"q_gl": q_gl_range})
-
 for well in range(len(q_oil_list)):
     q_gl = q_gl_list[well]
     q_oil = q_oil_list[well]
 
     # Ajuste del modelo
     fitter = Fitting(q_gl, q_oil)
-    a, b, c, d, e = fitter.fit(fitter.model_namdar)
-    print(f"✅ Well {well+1}: a={a}, b={b}, c={c}, d={d}, e={e}")
-
-    # Predecir valores
-    y_pred = fitter.model_namdar(q_gl_range, a, b, c, d, e)
-
-    # Reemplazar valores negativos con 0 en lugar de eliminarlos
-    y_pred[y_pred < 0] = 0
-
-    # Agregar columna al DataFrame con el nombre "Well_X"
-    df_input[f"well_{well}"] = y_pred
-
-q_gl = df_input['q_gl'].tolist()
-q_oil = df_input.iloc[: , 1:].T.to_numpy().tolist()
+    y_pred = fitter.fit(model = fitter.model_namdar,
+                        range = q_gl_range)
+    y_pred_list.append(y_pred)
 
 # Crear modelo de optimización
-model = OptimizationModel(q_gl, q_oil, 4600)
+model = OptimizationModel(q_gl = q_gl_range, 
+                          q_fluid_wells = y_pred_list, 
+                          available_qgl_total = 4600)
 
 # Construir el modelo paso a paso
 model.define_optimisation_problem()
@@ -57,7 +43,7 @@ model.solve_prob()
 # Obtener resultados
 result_prod_rates = model.get_maximised_prod_rates()
 result_optimal_qgl = model.get_optimal_injection_rates()
-resultados = list(zip(result_prod_rates, result_optimal_qgl))
+results = list(zip(result_prod_rates, result_optimal_qgl))
 
 # Definir el archivo de salida
 output_file = "results/output.txt"
@@ -72,7 +58,7 @@ with open(output_file, "w") as file:
 
     # Resultados por pozo
     file.write("Resultados por pozo:\n")
-    for i, (prod, qgl) in enumerate(resultados):
+    for i, (prod, qgl) in enumerate(results):
         file.write(f"Well {i+1}: Producción óptima = {prod}, q_gl óptimo = {qgl}\n")
 
 print(f"Optimización completada. Resultado guardado en '{output_file}'.")

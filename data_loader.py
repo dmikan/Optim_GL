@@ -19,6 +19,9 @@ class DataLoader:
         column_label_prod = df.columns[2::2]
         list_of_wells_qgl = df.loc[:, column_labels_qgl].T.to_numpy().tolist()
         list_of_well_prods = df.loc[:, column_label_prod].T.to_numpy().tolist()
+        # Asegurar que todos los valores en q_gl_list sean numéricos
+        list_of_wells_qgl = [[x for x in q_gl if not np.isnan(x)] for q_gl in list_of_wells_qgl]
+        list_of_well_prods = [[x for x in q_oil if not np.isnan(x)] for q_oil in list_of_well_prods]
         return list_of_wells_qgl, list_of_well_prods
 
 

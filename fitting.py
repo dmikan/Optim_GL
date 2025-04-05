@@ -12,11 +12,13 @@ class Fitting():
         self.q_gl = q_gl
         self.q_oil = q_oil
 
-    def fit(self, model):
+    def fit(self, model, range):
         params_list, _ = curve_fit(model, self.q_gl, self.q_oil, 
                                    bounds = ([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf], 
-                                             [np.inf, np.inf, np.inf, np.inf, 100]))
-        return params_list
+                                             [np.inf, np.inf, np.inf, np.inf, 110]))
+        y_pred = model(range, *params_list)
+        y_pred[y_pred < 0] = 0
+        return y_pred
 
     def model_namdar(self, q_gl_range, a, b, c, d, e):
         return (
